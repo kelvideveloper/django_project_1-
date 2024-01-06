@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>autenticação</title>
+    <link rel="stylesheet" href={% static "coreapp/css/style.css" %}>
+</head>
+<body>
+    <center>
+        <div>
+            <h1>Já possue uma conta ?</h1>
+           
+            <a href={% url "coreapp:login" %}>
+                <button class="button-green">
+                    Entrar
+                </button>
+            </a>
+           
+            <h1>Ou</h1>
+           
+            <a href={% url "coreapp:cadastro" %}>
+                <button class="button-green">
+                    cadastre-se
+                </button>
+            </a>
+            
+           </div>
+    </center>
+  
+</body>
+</html>

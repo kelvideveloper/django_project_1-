@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static "coreapp/css/style.css" %}>
+    <title>login</title>
+</head>
+<body>
+    <center>
+        <h1 >
+            {% if form_action == "/cadastro" %}
+                cadastro
+            {% else %}
+                login
+            {% endif %}
+        </h1>
+    </center>
+   <center>
+    <div class= 'card'>
+        <div class="main-content container">
+            <form action="{{ form_action }}" method="POST">
+              {% csrf_token %}
+          
+              <div class="form-content form-content-grid">
+                {% for field in form %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{field}}
+          
+                    {% if field.help_text %}
+                      <p class="help-text">{{ field.help_text }}</p>
+                    {% endif %}
+          
+                    {{ field.errors }}
+                  </div>
+                {% endfor %}
+              </div>
+              {% if form.non_field_errors %}
+              {{form.non_field_errors}}
+              {% endif %}
+              {% if form.errors %}
+              <div class="form-content form-content-grid">
+                <div class="form-group">
+                  <div class="message message-error">
+                    O formulário contém erros
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              
+              
+                
+              <center>
+                <div class="form-content form-content-grid">
+                    <div class="form-group">
+                      <button type="submit">{% if form_action == "/cadastro" %}
+                        enviar
+                    {% else %}
+                        entrar
+                    {% endif %}</button>
+                    </div>
+                  </div>
+              </center>
+            </form>
+          </div>
+       </div>
+   </center>
+    
+<script src ={% static "coreapp/js/jquery.min.js" %} ></script>
+<script src ={% static "coreapp/js/jquery.mask.min.js" %} ></script>
+<script src ={% static "coreapp/js/mask.js" %} ></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static "coreapp/css/style.css" %}>
+    <title>página inicial</title>
+    
+</head>
+<body>
+    <header class="main-header-container">
+       
+        <div class="main-header container">
+            
+            <h1>
+                <center>
+                    <span class = "home-title" >Avasus</span>
+                </center>
+            </h1>
+
+
+        </div>
+    </header>
+    <p>
+        <a href={% url "coreapp:logout" %}>logout</a>
+    </p>
+</body>
+</html>
