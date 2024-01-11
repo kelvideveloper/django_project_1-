@@ -8,7 +8,7 @@
     <title>página inicial</title>
     
 </head>
-<body>
+<body >
     <header class="main-header-container">
        
         <div class="main-header container">
@@ -22,8 +22,19 @@
 
         </div>
     </header>
-    <p>
-        <a href={% url "coreapp:logout" %}>logout</a>
+    <p style="position: absolute; top: 0; right: 0; text-align: right; margin: 1%;">
+        <a style = "color:white" href={% url "coreapp:logout" %}>encerrar seção</a>
     </p>
+   <center>
+    <div class = "card" style = "margin:2%;">
+        <p style = "margin:1%;">Nome: {{user_data.nome_completo}} </p>
+        <p style = "margin:1%;">Data de nascimento: {{user_data.data_de_nascimento}}, {{idade}} anos</p>
+        <p style = "margin:1%;">Cpf: {{user_data.user}} </p>
+        <p style = "margin:1%;">{% if esta_apto %}Você pode participar da pesquisa. ✔{% else %}você não pode participar da pesquisa ❌{% endif %} </p>
+        
+    </div>
+   </center>
+   <center><button>realizar agendamento</button></center>
+    
 </body>
 </html>

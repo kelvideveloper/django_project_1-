@@ -8,6 +8,18 @@
     <title>login</title>
 </head>
 <body>
+    {% if messages %}
+        {% for message in messages %}
+        <center>
+          <div style = "width:50%">
+            <div  {% if message.tags == 'warning' %}class="message message-warning" {% else %}class="message message-success"{% endif %} >
+              {{ message }}
+            </div>
+          </div>
+        </center>
+          
+        {% endfor %}
+    {% endif %}
     <center>
         <h1 >
             {% if form_action == "/cadastro" %}

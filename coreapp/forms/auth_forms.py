@@ -4,7 +4,7 @@ from datetime import  datetime
 from django.contrib.auth.models import User
 import xml.etree.ElementTree as ET
 import requests
-from coreapp.utils import validate_cpf
+from utils.utils import validate_cpf 
 class LoginForm(forms.Form):
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf').replace('.', '' ).replace('-', '')
@@ -30,6 +30,13 @@ class LoginForm(forms.Form):
     
 
 class SingUpForm(forms.ModelForm):
+    cpf = forms.CharField(
+        widget= forms.TextInput(
+            attrs={
+                'class': 'mask-cpf'
+            }
+        )
+    )
     senha = forms.CharField(
         widget=forms.PasswordInput(),
         
@@ -39,13 +46,7 @@ class SingUpForm(forms.ModelForm):
         widget=forms.PasswordInput(),
         
     )
-    cpf = forms.CharField(
-        widget= forms.TextInput(
-            attrs={
-                'class': 'mask-cpf'
-            }
-        )
-    )
+    
     data_de_nascimento = forms.DateField(
         widget= forms.TextInput(
             attrs={
@@ -58,16 +59,20 @@ class SingUpForm(forms.ModelForm):
     if response.status_code == 200:
         root = ET.fromstring(response.content)
         grupos = root.findall('.//grupoatendimento')
-        opcoes = [(grupo.find('codigo_si_pni').text, grupo.find('nome').text) for grupo in grupos]
+        opcoes = {'0':'Escolha uma opção',}
+        
+        map = 0
+        for grupo in grupos:
+            map = map + 1
+            opcoes[str(map)] = grupo.find('nome').text
+        
+            
         print(opcoes)
-        opcoes.insert(0, ('nada', 'Escolha uma opção'))
-    for opcao in opcoes:
-        print(opcao) 
-    Grupo_de_atendimento = forms.ChoiceField(
+    grupo_de_atendimento = forms.ChoiceField(
         choices= opcoes,
         widget=forms.Select(
         ),
-        initial= 'nada'
+        initial= '0'
             )
     teve_covid_recentemente = forms.ChoiceField(
         widget= forms.RadioSelect(
@@ -84,16 +89,24 @@ class SingUpForm(forms.ModelForm):
     class Meta:
         model =  Aluno
         fields = [
-            'nome',
+            'nome_completo',
             'data_de_nascimento',
-            
+            'grupo_de_atendimento',
+            'teve_covid_recentemente',
         ]
     
-    def clean_teve_covid_recentemente(self):
+    """ def clean_teve_covid_recentemente(self):
         resposta = self.cleaned_data.get('teve_covid_recentemente')
         if resposta:
             return resposta
         raise forms.ValidationError("você não pode participar se teve covid recentemente")
+     """
+    def clean_grupo_de_atendimento(self):
+        data = self.cleaned_data["grupo_de_atendimento"]
+        if data!= '0' :
+            return data
+        raise forms.ValidationError("Escolha uma das opções")
+        
     
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf').replace('.', '' ).replace('-', '')
@@ -114,24 +127,26 @@ class SingUpForm(forms.ModelForm):
         this_year = today.year
         this_month = today.month
         this_day = today.day
-        if this_year - born_year >= 19:
+        if this_year - born_year >= 1:
             valid =  True
-        elif this_year - born_year == 18 and this_month > born_month:
+        elif this_year - born_year == 0 and this_month > born_month:
             valid = True
-        elif this_year - born_year == 18 and this_month == born_month and this_day >= born_day:
+        elif this_year - born_year == 0 and this_month == born_month and this_day >= born_day:
             valid = True
         else:
             valid = False
         if valid:
             return br_data
         else:
+            raise forms.ValidationError('está data de nascimento não é possível')
+      
+        """ 
+        if valid:
+            return br_data
+        else:
             raise forms.ValidationError('você precisa ter mais de 18 anos para criar uma conta')
+      """
     
-    def clean_Grupo_de_atendimento(self):
-        grupo = self.cleaned_data["Grupo_de_atendimento"]
-        if(grupo == "001501"):
-            raise forms.ValidationError("o seu grupo não pode participar dessa pesquisa")
-        return data
     
 
     def clean(self):
