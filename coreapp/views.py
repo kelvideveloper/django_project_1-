@@ -12,9 +12,10 @@ from datetime import  datetime
 
 def home(request):
     if request.user.is_authenticated:
+        
         user_data = Aluno.objects.get(user = request.user)
         today = datetime.today()
-        born =datetime.strptime(str(request.session.get('born','01-01-0000')), '%Y-%m-%d').date() 
+        born = user_data.data_de_nascimento
         if born is not None:
             esta_apto = True
             idade = verify_age(born,today)

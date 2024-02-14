@@ -4,8 +4,8 @@ import xml.etree.ElementTree as ET
 import requests
 # Create your models here.
 class Estabelecimento(models.Model):
-    co_unidade = models.CharField(max_length = 14 )
-    co_unidade = models.CharField(max_length = 8)
+    co_cnes = models.CharField(max_length = 14 )
+    nome = models.CharField(max_length = 8)
     
 
 class Aluno(models.Model):
