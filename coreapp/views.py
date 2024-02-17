@@ -11,8 +11,9 @@ from datetime import  datetime
 
 
 def home(request):
-    if request.user.is_authenticated:
-        
+    if request.user.is_authenticated and not request.user.is_superuser:
+        print(request.user.id)
+        ...
         user_data = Aluno.objects.get(user = request.user)
         today = datetime.today()
         born = user_data.data_de_nascimento
@@ -37,7 +38,7 @@ def home(request):
         return render(request, 'coreapp/authentication_screen.html')
 
 def login_view(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and not request.user.is_superuser:
         return redirect("coreapp:home")
 
     if request.method == 'POST':
@@ -89,7 +90,8 @@ def cadastro_view(request):
             text = "você não está apto para a pesquisa pois:"
             if not e_de_maior:
                 text = text + "Não tem 18 anos ou mais;"
-            if form.cleaned_data.get('teve_covid_recentemente'):
+            condition = form.cleaned_data.get('teve_covid_recentemente') == "True"
+            if condition:
                 text = text + " Teve covid recentemente;"
             if form.cleaned_data.get('grupo_de_atendimento') == "67" or form.cleaned_data.get('grupo_de_atendimento') == "70" or form.cleaned_data.get('grupo_de_atendimento') == "65":
                 text = text + "É pertencente ao grupo " + form.opcoes[form.cleaned_data.get('grupo_de_atendimento')] + "."

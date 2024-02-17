@@ -68,12 +68,7 @@ class SingUpForm(forms.ModelForm):
         
             
        
-    grupo_de_atendimento = forms.ChoiceField(
-        choices= opcoes,
-        widget=forms.Select(
-        ),
-        initial= '0'
-            )
+    
     teve_covid_recentemente = forms.ChoiceField(
         widget= forms.RadioSelect(
             attrs={

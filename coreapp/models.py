@@ -13,7 +13,7 @@ class Aluno(models.Model):
     if response.status_code == 200:
         root = ET.fromstring(response.content)
         grupos = root.findall('.//grupoatendimento')
-        opcoes = {'0':'Escolha uma opção',}
+        opcoes = {}
         
         map = 0
         for grupo in grupos:

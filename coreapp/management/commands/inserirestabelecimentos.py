@@ -15,14 +15,14 @@ class Command(BaseCommand):
             
                 for estabelecimento in estabelecimentos:
                     
-                    if not Estabelecimento.objects.filter(nome = estabelecimento.find('no_razao_social').text).exists():
+                    if not Estabelecimento.objects.filter(nome = estabelecimento.find('no_fantasia').text).exists():
                         atual = Estabelecimento.objects.create(
-                            nome = estabelecimento.find('no_razao_social').text,
+                            nome = estabelecimento.find('no_fantasia').text,
                             co_cnes = estabelecimento.find('co_cnes').text,
                             )  
                         atual.save()
                         self.stdout.write(
-                        self.style.SUCCESS(f' estabelecimanto " {estabelecimento.find('no_razao_social').text} " adicionado com sucesso' )
+                        self.style.SUCCESS(f' estabelecimanto " {estabelecimento.find('no_fantasia').text} " adicionado com sucesso' )
                         )
                          
                    

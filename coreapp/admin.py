@@ -12,5 +12,5 @@ class AlunoAdmin(admin.ModelAdmin):
 class EstabelecimentoAdmin(admin.ModelAdmin):
     
     list_display = ['nome','co_cnes',]
-    
+    list_filter = ['nome', 'co_cnes',]
   
