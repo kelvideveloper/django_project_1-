@@ -5,8 +5,7 @@ import requests
 # Create your models here.
 class Estabelecimento(models.Model):
     co_cnes = models.CharField(max_length = 14 )
-    nome = models.CharField(max_length = 8)
-    
+    nome = models.CharField(max_length = 100)
 
 class Aluno(models.Model):
     xml_url = "https://selecoes.lais.huol.ufrn.br/media/grupos_atendimento.xml"
@@ -32,6 +31,3 @@ class Aluno(models.Model):
 
     def __str__(self):
         return self.nome_completo
-    
-    
-    

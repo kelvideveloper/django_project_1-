@@ -67,7 +67,7 @@ class SingUpForm(forms.ModelForm):
             opcoes[str(map)] = grupo.find('nome').text
         
             
-        print(opcoes)
+       
     grupo_de_atendimento = forms.ChoiceField(
         choices= opcoes,
         widget=forms.Select(
