@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href={% static "coreapp/css/style.css" %}>
-    <title>login</title>
+    <title>{{page}} </title>
 </head>
 <body>
     {% if messages %}
@@ -22,11 +22,7 @@
     {% endif %}
     <center>
         <h1 >
-            {% if form_action == "/cadastro" %}
-                cadastro
-            {% else %}
-                login
-            {% endif %}
+           {{page}}
         </h1>
     </center>
    <center>
@@ -67,10 +63,10 @@
               <center>
                 <div class="form-content form-content-grid">
                     <div class="form-group">
-                      <button type="submit">{% if form_action == "/cadastro" %}
-                        enviar
-                    {% else %}
+                      <button type="submit">{% if form_action == "/login" %}
                         entrar
+                    {% else %}
+                        enviar
                     {% endif %}</button>
                     </div>
                   </div>

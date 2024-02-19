@@ -96,11 +96,7 @@ class SingUpForm(forms.ModelForm):
             return resposta
         raise forms.ValidationError("você não pode participar se teve covid recentemente")
      """
-    def clean_grupo_de_atendimento(self):
-        data = self.cleaned_data["grupo_de_atendimento"]
-        if data!= '0' :
-            return data
-        raise forms.ValidationError("Escolha uma das opções")
+    
         
     
     def clean_cpf(self):

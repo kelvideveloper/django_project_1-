@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from coreapp.views import home, login_view, cadastro_view, termos, logout_view
+from coreapp.views import home, login_view, cadastro_view, termos, logout_view, agendar
 
 app_name = "coreapp"
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('cadastro', cadastro_view, name='cadastro'),
     path('termos de uso', termos, name='termos'),
     path('logout', logout_view, name='logout'),
+    path('agendar', agendar, name='agendar'),
 ]

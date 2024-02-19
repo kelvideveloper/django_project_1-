@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from coreapp.forms import LoginForm, SingUpForm
+from coreapp.forms import LoginForm, SingUpForm, ScheduleForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +9,27 @@ from django.contrib import messages
 from utils.utils import verify_age_is_more_than_18, verify_age
 from datetime import  datetime
 
+def agendar(request):
+    if request.user.is_authenticated and not request.user.is_superuser:
+        user_data = Aluno.objects.get(user = request.user)
+        today = datetime.today()
+        born = user_data.data_de_nascimento
+        if born is not None:
+            idade = verify_age(born,today)
+            if idade < 18 or user_data.grupo_de_atendimento == "67" or user_data.grupo_de_atendimento == "70" or user_data.grupo_de_atendimento == "65" or user_data.teve_covid_recentemente:
+                return redirect('coreapp:home')
+
+    if request.method == 'POST':
+        form = ScheduleForm(data=request.POST)
+    else:
+        form = ScheduleForm()
+    
+    context = {
+        'form' : form,
+        'form_action': '/agendar',
+        'page': 'agendar exame'
+    }
+    return render( request, 'coreapp/form_screen.html',context)
 
 def home(request):
     if request.user.is_authenticated and not request.user.is_superuser:
@@ -60,9 +81,8 @@ def login_view(request):
         form = LoginForm()
     context = {
         'form': form,
-        'url_action': '/login',
-      
-        
+        'form_action': '/login',
+        'page': 'Login' 
     }
     return render(request, 'coreapp/form_screen.html',context)
 
@@ -104,6 +124,8 @@ def cadastro_view(request):
     context = {
         'form': form,
         'form_action': '/cadastro',
+        'page': 'Cadastro'
+
     }
     return render(request, 'coreapp/form_screen.html',context)
 

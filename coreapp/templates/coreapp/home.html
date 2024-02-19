@@ -34,7 +34,19 @@
         
     </div>
    </center>
-   {% if  esta_apto %}<center><button>realizar agendamento</button></center>{% endif %}
+   
+   {% if  esta_apto %}<center>
+    <a href={% url "coreapp:agendar" %}>
+        <div class="form-content form-content-grid">
+            <div class="form-group">
+                <button type="submit">
+                   realizar agendamento
+                </button>
+            </div>
+        </div>
+    </a>
+    
+  </center>{% endif %}
    
     
 </body>
