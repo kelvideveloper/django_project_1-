@@ -14,15 +14,17 @@ def agendar(request):
         user_data = Aluno.objects.get(user = request.user)
         today = datetime.today()
         born = user_data.data_de_nascimento
-        if born is not None:
-            idade = verify_age(born,today)
-            if idade < 18 or user_data.grupo_de_atendimento == "67" or user_data.grupo_de_atendimento == "70" or user_data.grupo_de_atendimento == "65" or user_data.teve_covid_recentemente:
-                return redirect('coreapp:home')
-
-    if request.method == 'POST':
-        form = ScheduleForm(data=request.POST)
+        
+        idade = verify_age(born,today)
+        if idade < 18 or user_data.grupo_de_atendimento == "67" or user_data.grupo_de_atendimento == "70" or user_data.grupo_de_atendimento == "65" or user_data.teve_covid_recentemente:
+            return redirect('coreapp:home')
+        
+        if request.method == 'POST':
+            form = ScheduleForm(data=request.POST, age = idade)
+        else:
+            form = ScheduleForm(age = idade)
     else:
-        form = ScheduleForm()
+        return render(request, 'coreapp/authentication_screen.html')
     
     context = {
         'form' : form,
