@@ -1,5 +1,5 @@
 from django.contrib import admin
-from coreapp.models import Aluno, Estabelecimento
+from coreapp.models import Aluno, Estabelecimento, Agendamento
 
 
 @admin.register(Aluno)
@@ -13,4 +13,9 @@ class EstabelecimentoAdmin(admin.ModelAdmin):
     
     list_display = ['nome','co_cnes',]
     list_filter = ['nome', 'co_cnes',]
+@admin.register(Agendamento)
+class AgendamentoAdmin(admin.ModelAdmin):
+    
+    list_display = ['date','time',]
+    
   

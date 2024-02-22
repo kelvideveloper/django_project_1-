@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from coreapp.models import Agendamento
 from datetime import datetime, timedelta, date
@@ -49,6 +50,20 @@ class ScheduleForm(forms.ModelForm):
             "estabelecimento",
             "date",
         ]
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        estabelecimento = cleaned_data.get('estabelecimento')
+        date = cleaned_data.get('date')
+        
+        age_horary = datetime.strptime(f'{self.horary}::00::00', '%H::%M::%S').time()
+        agendamentos = Agendamento.objects.filter(estabelecimento = estabelecimento, date = date, time = age_horary )
+        if agendamentos.count() > 4:
+            raise forms.ValidationError("Desculpe, mas esse horário já está totalmente ocupado")
+        
+        
+        return cleaned_data
+    
+
     def clean_date(self):
         data = self.cleaned_data["date"]
         age_horary =datetime.strptime(f'{self.horary}::00::00', '%H::%M::%S').time() 

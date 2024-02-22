@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import xml.etree.ElementTree as ET
 import requests
-from datetime import time
+from datetime import  datetime
 # Create your models here.
 class Estabelecimento(models.Model):
     co_cnes = models.CharField(max_length = 14 )
@@ -14,14 +14,7 @@ class Estabelecimento(models.Model):
 class Agendamento(models.Model):
     estabelecimento = models.ForeignKey(Estabelecimento, on_delete = models.SET_NULL, null  =True)
     date = models.CharField( verbose_name  = "horário", max_length = 15)
-    possible_times = {
-        '13:00': time(hour=13,),
-        '14:00': time(hour=14,),
-        '15:00': time(hour=15,),
-        '16:00': time(hour=16,),
-        '17:00': time(hour=17,),
-    }
-    time = models.TimeField( auto_now=False, auto_now_add=False,choices = possible_times, )
+    time = models.TimeField()
 class Aluno(models.Model):
     xml_url = "https://selecoes.lais.huol.ufrn.br/media/grupos_atendimento.xml"
     response = requests.get(xml_url)
