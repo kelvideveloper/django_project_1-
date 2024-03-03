@@ -11,10 +11,7 @@ class Estabelecimento(models.Model):
     def __str__(self):
         return f"{self.nome}, {self.co_cnes}"
     
-class Agendamento(models.Model):
-    estabelecimento = models.ForeignKey(Estabelecimento, on_delete = models.SET_NULL, null  =True)
-    date = models.CharField( verbose_name  = "horário", max_length = 15)
-    time = models.TimeField()
+
 class Aluno(models.Model):
     xml_url = "https://selecoes.lais.huol.ufrn.br/media/grupos_atendimento.xml"
     response = requests.get(xml_url)
@@ -29,6 +26,7 @@ class Aluno(models.Model):
             opcoes[str(map)] = grupo.find('nome').text
         
     user = models.OneToOneField(User, on_delete=models.PROTECT,)
+
     nome_completo = models.CharField(max_length = 80 )
     data_de_nascimento = models.DateField()
     grupo_de_atendimento = models.CharField(
@@ -39,3 +37,8 @@ class Aluno(models.Model):
 
     def __str__(self):
         return self.nome_completo
+class Agendamento(models.Model):
+    estabelecimento = models.ForeignKey(Estabelecimento, on_delete = models.SET_NULL, null  =True)
+    aluno = models.ForeignKey(Aluno, on_delete = models.PROTECT, )
+    date = models.CharField( verbose_name  = "horário", max_length = 50)
+        

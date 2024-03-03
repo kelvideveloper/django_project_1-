@@ -16,6 +16,6 @@ class EstabelecimentoAdmin(admin.ModelAdmin):
 @admin.register(Agendamento)
 class AgendamentoAdmin(admin.ModelAdmin):
     
-    list_display = ['date','time',]
+    list_display = ['date','estabelecimento']
     
   

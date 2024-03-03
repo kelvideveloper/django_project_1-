@@ -3,24 +3,63 @@ from coreapp.forms import LoginForm, SingUpForm, ScheduleForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login, logout
-from coreapp.models import Aluno
+from coreapp.models import Aluno, Agendamento
 from django.contrib.auth.models import User
 from django.contrib import messages
 from utils.utils import verify_age_is_more_than_18, verify_age
-from datetime import  datetime
-
+from datetime import  datetime, date
+import pytz
+@login_required(login_url="coreapp:home")
 def agendar(request):
-    if request.user.is_authenticated and not request.user.is_superuser:
-        user_data = Aluno.objects.get(user = request.user)
-        today = datetime.today()
-        born = user_data.data_de_nascimento
+    user_data = Aluno.objects.get(user = request.user)
+    agendamentos = Agendamento.objects.filter(aluno = user_data)
+    today = datetime.today()
+    born = user_data.data_de_nascimento
+    idade = verify_age(born,today)
+    if idade <= 29:
+        horary = '13' 
+    elif idade <= 39:
+        horary = '14'
+    elif idade <= 49:
+        horary = '15'  
+    elif idade <= 59:
+        horary = '16'
+    else:
+        horary = '17'
+    age_horary =datetime.strptime(f'{horary}::00::00', '%H::%M::%S').time()
+    no_expireds = 0
+    if agendamentos:
+        today = date.today()
+        for agendamento in agendamentos:
+            data = agendamento.date[:10]
+            date_day = datetime.strptime(data, '%d/%m/%Y').date()
+            if today < date_day:
+                no_expireds = 1
+                break
+            elif today == date_day:
+                time_now =  datetime.now(pytz.timezone('America/Sao_Paulo')).time()
+                if age_horary > time_now:
+                    no_expireds = 1
+                    break
+    if no_expireds != 0:
+        return redirect("coreapp:home")
+    if not request.user.is_superuser:
         
-        idade = verify_age(born,today)
+        
         if idade < 18 or user_data.grupo_de_atendimento == "67" or user_data.grupo_de_atendimento == "70" or user_data.grupo_de_atendimento == "65" or user_data.teve_covid_recentemente:
             return redirect('coreapp:home')
         
         if request.method == 'POST':
             form = ScheduleForm(data=request.POST, age = idade)
+            if form.is_valid():
+                data = form.save(commit = False)
+                date_day = form.cleaned_data.get("date")
+                
+                data.date_day = f"{date_day} às {horary}:00"
+                data.aluno = Aluno.objects.get(user=request.user)
+                data.save()
+                messages.add_message(request, messages.SUCCESS, "Seu agendamento foi realizado com sucesso")
+                return redirect("coreapp:home")
         else:
             form = ScheduleForm(age = idade)
     else:
@@ -34,8 +73,9 @@ def agendar(request):
     return render( request, 'coreapp/form_screen.html',context)
 
 def home(request):
+    ...
     if request.user.is_authenticated and not request.user.is_superuser:
-        print(request.user.id)
+        
         ...
         user_data = Aluno.objects.get(user = request.user)
         today = datetime.today()

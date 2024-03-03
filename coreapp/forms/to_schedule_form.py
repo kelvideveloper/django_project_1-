@@ -28,17 +28,19 @@ class ScheduleForm(forms.ModelForm):
             '2': 'sexta-feira',
             '3': 'sábado',
         }
-       
-      
-        if now == 7:
+        time_now =  datetime.now(pytz.timezone('America/Sao_Paulo')).time()
+        age_horary =datetime.strptime(f'{self.horary}::00::00', '%H::%M::%S').time() 
+        if now == 6 and time_now > age_horary:
+            next_date = date.today() + timedelta(days=4)
+        elif now == 7:
             next_date = date.today() + timedelta(days=3)
         else:
             next_date = date.today() + timedelta(days=3 - now)
-
         for i in range(4):
             choices[str(next_date.strftime("%d/%m/%Y"))] = f'{map_day_names[str(i)]}, dia {next_date.strftime("%d/%m/%Y")} às {horary}:00 horas '
             next_date = next_date + timedelta(days=1)
-
+        
+        
         self.fields['date'] = forms.ChoiceField(
             label="Data",
             choices=choices,
@@ -53,10 +55,10 @@ class ScheduleForm(forms.ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
         estabelecimento = cleaned_data.get('estabelecimento')
-        date = cleaned_data.get('date')
+        date = f"{cleaned_data.get('date')} às {self.horary}:00"
         
-        age_horary = datetime.strptime(f'{self.horary}::00::00', '%H::%M::%S').time()
-        agendamentos = Agendamento.objects.filter(estabelecimento = estabelecimento, date = date, time = age_horary )
+        
+        agendamentos = Agendamento.objects.filter(estabelecimento = estabelecimento, date = date)
         if agendamentos.count() > 4:
             raise forms.ValidationError("Desculpe, mas esse horário já está totalmente ocupado")
         
